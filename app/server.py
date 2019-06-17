@@ -6,31 +6,10 @@ import uvicorn, aiohttp, asyncio
 from io import BytesIO
 
 from fastai import *
-from fastai.vision import *
+from fastai.text import *
 
 model_file_url = 'https://www.dropbox.com/s/y4kl2gv1akv7y4i/stage-2.pth?raw=1'
 model_file_name = 'model'
-classes = ['amendment',
- 'assignment',
- 'change of control',
- 'compensation',
- 'confidentiality',
- 'counterparts',
- 'covenants',
- 'definitions',
- 'dispute resolution',
- 'exclusivity',
- 'force majeure',
- 'governing law',
- 'indemnification',
- 'intellectual property',
- 'non-compete',
- 'notices',
- 'representations and warranties',
- 'severability',
- 'term',
- 'termination',
- 'waiver']
 path = Path(__file__).parent
 
 app = Starlette()
@@ -46,9 +25,10 @@ async def download_file(url, dest):
 
 async def setup_learner():
     await download_file(model_file_url, path/'models'/f'{model_file_name}.pth')
-    data_bunch = ImageDataBunch.single_from_classes(path, classes,
-        tfms=get_transforms(), size=224).normalize(imagenet_stats)
-    learn = cnn_learner(data_bunch, models.resnet34, pretrained=False)
+    data_bunch = TextDataBunch.from_csv(path,csv_name='testing_clauses.csv',text_cols='text',label_cols='clause')
+    #learn = cnn_learner(data_bunch, models.resnet34, pretrained=False)
+    learn = text_classifier_learner(data_bunch, AWD_LSTM, pretrained=False)
+    #learn = get_t
     learn.load(model_file_name)
     return learn
 
@@ -71,4 +51,3 @@ async def analyze(request):
 
 if __name__ == '__main__':
     if 'serve' in sys.argv: uvicorn.run(app, host='0.0.0.0', port=8080)
-
