@@ -8,8 +8,8 @@ from io import BytesIO
 from fastai import *
 from fastai.text import *
 
-model_file_url = 'https://www.dropbox.com/s/y4kl2gv1akv7y4i/stage-2.pth?raw=1'
-model_file_name = 'model'
+model_file_url = 'https://drive.google.com/open?id=10MN520gXqIDnqJPSq5jURdgXtzDqU56e'
+model_file_name = 'export'
 path = Path(__file__).parent
 
 app = Starlette()
@@ -24,12 +24,12 @@ async def download_file(url, dest):
             with open(dest, 'wb') as f: f.write(data)
 
 async def setup_learner():
-    await download_file(model_file_url, path/'models'/f'{model_file_name}.pth')
-    data_bunch = TextDataBunch.from_csv(path,csv_name='testing_clauses.csv',text_cols='text',label_cols='clause')
+    await download_file(model_file_url, path/'models'/f'{model_file_name}.pkl')
     #learn = cnn_learner(data_bunch, models.resnet34, pretrained=False)
-    learn = text_classifier_learner(data_bunch, AWD_LSTM, pretrained=False)
+    #learn = text_classifier_learner(data_bunch, AWD_LSTM, pretrained=False)
     #learn = get_t
-    learn.load(model_file_name)
+    learn =load_learner(path/'models',f'{model_file_name}.pkl')
+    #learn.load(model)
     return learn
 
 loop = asyncio.get_event_loop()
