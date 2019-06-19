@@ -1,37 +1,71 @@
-<html lang='en'>
-    <head>
-        <meta charset='utf-8'>
-        <link rel='stylesheet' href='../static/style.css'>
-        <script src='../static/client.js'></script>
-    </head>
-    <body>
-        <div>
-            <div class='center'>
-                <div class='title'>DEMO YOUR ML MODEL</div>
-                <div class='content'>
-                    <div class='no-display'>
-                        <input id='file-input'
-                            class='no-display'
-                            type='file'
-                            name='file'
-                            accept='image/*'
-                            onchange='showPicked(this)'>
-                    </div>
-                    <button class='choose-file-button' type='button' onclick='showPicker()'>Select Image</button>
-                    <div class='upload-label'>
-                        <label id='upload-label'>No file chosen</label>
-                    </div>
-                    <div>
-                        <img id='image-picked' class='no-display' alt='Chosen Image' height='200'>
-                    </div>
-                    <div class='analyze'>
-                        <button id='analyze-button' class='analyze-button' type='button' onclick='analyze()'>Analyze</button>
-                    </div>
-                    <div class='result-label'>
-                        <label id='result-label'></label>
-                    </div>
-                </div>
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>Clause Classification Predictions</title>
+    <script type="text/javascript">
+    var el = x => document.getElementById(x);
+
+    function showText(){
+      text = el('textInput').value;
+      el('textOutput').innerHTML = text ;
+    }
+
+    function analyze(){
+        text = el('textInput').value;
+        if (text.split(" ").length <5) alert('Please select a longer sentence/phrase');
+
+        el('analyze-button').innerHTML = 'Analyzing...';
+
+        var xhr = new XMLHttpRequest();
+        var loc = window.location
+        xhr.open('POST', `${loc.protocol}//${loc.hostname}:${loc.port}/analyze`,true);
+        xhr.onerror = function() {alert (xhr.responseText);}
+        xhr.onload = function(e) {
+          if (this.readyState === 4) {
+            var response = JSON.parse(e.target.responseText);
+            el('labelOutput').innerHTML = `Result = ${response['label']}`;
+            el('label_prob').innerHTML = `${response['score']}`;
+            el('label_confidence').innerHTML = `${response['Confidence']}`;
+          }
+          el('analyze-button').innerHTML = 'Analyze';
+        }
+
+        var formData = new FormData();
+        formData.append('unique_name',text)
+        xhr.send(formData)
+    }
+    </script>
+  </head>
+  <body>
+    <div>
+      <div class="center">
+        <div class="title">
+          Enter Clause Text Data
         </div>
-    </body>
+
+          <textarea id="textInput" name ="textInput" rows="8" cols="80" form='testClause' >Enter Clause Text Here....
+          </textarea>
+          <br>
+          <button class='choose-file-button' type='buttton' onclick='showText()'>Read Text </button>
+      </div>
+      <p> Entered Text:</p>
+    </div>
+    <p id = "textOutput"></p>
+
+    <div class="center">
+      <div>
+        <button id='analyze-button' class='analyze-button' type='button' onclick='analyze()'>Analyze </button>
+      </div>
+    </div>
+    Predicted Clause: <p id = labelOutput>None</p>
+    Score: <p id = label_prob>0.0</p>
+    Confidence: <p id = label_confidence>N/A</p>
+    <div class="center">
+    <!--form class="" action="/analyze" method="post" id='testClause'>
+      <button class='choose-file-button' type='submit' onclick="showLabel()">Read Text</button>
+    </form-->
+    </div>
+  </body>
 </html>
