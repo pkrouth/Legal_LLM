@@ -5,16 +5,18 @@ RNN based Multi Class Classification of legal clauses
 
 ## Data:
 
+## Data Augmentation:
 
 ## Model:
 - AWD-LSTM 
-
+- Baseline: Logistic Regression, Random Forrest
 ## Inference:
 
 
 ## Integration in final product
 
 
-## App for Google Compute Engine
+## Reference: 
+App template for Google Compute Engine deployement
 
 Source: https://course.fast.ai/deployment_google_app_engine.html
