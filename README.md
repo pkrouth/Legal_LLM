@@ -1,5 +1,19 @@
-# Legal_Clause_Classification
-RNN Multi Class Classification
+# Legal Clause Classification
+RNN based Multi Class Classification of legal clauses
+
+## Background: 
+
+## Data:
+
+
+## Model:
+- AWD-LSTM 
+
+## Inference:
+
+
+## Integration in final product
+
 
 ## App for Google Compute Engine
 
