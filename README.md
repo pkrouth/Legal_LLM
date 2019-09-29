@@ -17,7 +17,7 @@ RNN based Multi Class Classification of legal clauses
 
 
 ### Validation Set
-
+[Test ]RNN-AWD_LSTM_training.png "Test"
 
 ## Inference:
 
