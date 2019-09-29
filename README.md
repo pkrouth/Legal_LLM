@@ -10,6 +10,15 @@ RNN based Multi Class Classification of legal clauses
 ## Model:
 - AWD-LSTM 
 - Baseline: Logistic Regression, Random Forrest
+
+## Accuracy Metric
+
+### Training Set
+
+
+### Validation Set
+
+
 ## Inference:
 
 
