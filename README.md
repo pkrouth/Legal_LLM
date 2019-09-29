@@ -2,14 +2,17 @@
 RNN based Multi Class Classification of legal clauses
 
 ## Background: 
+Why do we need LCC?
+
+Document review and a Legal AI Engine.
 
 ## Data:
 
 ## Data Augmentation:
 
 ## Model:
-- AWD-LSTM 
 - Baseline: Logistic Regression, Random Forrest
+- Deep Learning: AWD-LSTM 
 
 ## Accuracy Metric
 
@@ -23,7 +26,7 @@ RNN based Multi Class Classification of legal clauses
 
 
 ## Integration in final product
-
+For a demo of the product driven by this model please visit [Smriti.ai](www.smriti.ai)
 
 ## Reference: 
 App template for Google Compute Engine deployement
