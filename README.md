@@ -16,10 +16,6 @@ In this work, first a transfer learning based “Legal Language Model” was fin
 
 
 
-## Data:
-
-## Data Augmentation:
-
 ## Model:
 - Baseline: Logistic Regression, Random Forrest
 - Deep Learning: AWD-LSTM 
