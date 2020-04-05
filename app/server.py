@@ -1,53 +1,53 @@
 
-import uvicorn, aiohttp, asyncio
-
-from starlette.applications import Starlette
-from starlette.responses import PlainTextResponse, HTMLResponse, JSONResponse
-from starlette.staticfiles import StaticFiles
-from starlette.middleware.cors import CORSMiddleware
-
+#Streamlit (3rd part)
+import streamlit as st
 from fastai import *
 from fastai.text import *
 
+#Image View
+from PIL import Image
 
-app = Starlette()
-app.debug = True
-app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
-app.mount('/static', StaticFiles(directory="app/static"))
-#model_file_url = 'https://www.dropbox.com/s/3y8ht35rxr0s1ao/model_exported.pkl?dl=0'
-#model_file_name = 'model_exported'
+st.title("Legal Clause Classifier")
+
+st.write("Using this classifier you can see how our model behaves as well as test any part of your contract to see the outputs.")
+
 path = Path(__file__).parent
+image = Image.open(path/"images/Confusion_matrix.png")
+st.image(image)
 
-async def setup_learner():
-    #await download_file(model_file_url, path/'models'/f'{model_file_name}.pkl')
-    learn =load_learner(path/'models','model_exported.pkl')
-    return learn
+text = st.text_area("Enter your text here:")
 
-loop = asyncio.get_event_loop()
-tasks = [asyncio.ensure_future(setup_learner())]
-learn = loop.run_until_complete(asyncio.gather(*tasks))[0]
-loop.close()
+if text:
+    st.write("Your Input text:", text)
 
+#st.header("Alternatively, you can upload a text file.")
 
+#file = st.file_uploader("Upload a text file:",type=['txt'])
 
-@app.route('/')
-def index(request):
-    html = path/'view'/'index.html'
-    return HTMLResponse(html.open().read())
+#if file:
+#    df = pd.read_csv(file)
+#    st.write(df)
 
 
-@app.route('/analyze', methods=['POST'])
-async def analyze(request):
-    data = await request.form()
-    class_, ind, probs = learn.predict(data['unique_name'])
+def setup_learner():
+    learn_fwd = load_learner(path/'models','model_exported.pkl')
+    return learn_fwd
+
+ 
+def analyze(learn, text):
+    class_, ind, probs = learn.predict(text)
     score = probs[ind].item()
     if score < 0.5:
-        Confidence='Low'
+        confidence = 'Low'
     else:
-        Confidence='High'
-    return JSONResponse({'label': str(class_),'score': float(score), 'Confidence':Confidence}) # This remains same
+        confidence = 'High'
+    return class_, score, confidence
 
 
-
-if __name__ == '__main__':
-    if 'serve' in sys.argv: uvicorn.run(app, host='0.0.0.0', port=8080)
+if st.button("Analyze"):
+    st.write("Analyzing...")
+    learn = setup_learner()
+    class_, score, confidence = analyze(learn, text)
+    st.write("Predicted Label:", class_)
+    st.write("Predicted Score:", score)
+    st.write("Confidence:", confidence)

@@ -1,0 +1,4 @@
+streamlit
+fastai==1.0.57
+torch==1.2.0
+
