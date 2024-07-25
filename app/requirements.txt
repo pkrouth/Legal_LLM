@@ -1,6 +1,6 @@
 streamlit
 fastai==1.0.57
-torch==1.2.0
+torch==2.2.0
 python-docx
 
 
